@@ -18,6 +18,11 @@ import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Display;
+import android.view.WindowManager;
+
 /**
  * (c) 2010 Nicolas Gramlich
  * (c) 2011 Zynga
@@ -30,8 +35,8 @@ public class MainActivity extends SimpleBaseGameActivity {
 	// Constants
 	// ===========================================================
 
-	private static final int CAMERA_WIDTH = 480;	//width
-	private static final int CAMERA_HEIGHT = 800;	//height
+	private static int CAMERA_WIDTH;	//width
+	private static int CAMERA_HEIGHT;	//height
 
 	// ===========================================================
 	// Fields
@@ -58,9 +63,17 @@ public class MainActivity extends SimpleBaseGameActivity {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
+	
+	
 
 	@Override
 	public EngineOptions onCreateEngineOptions() {
+		WindowManager win = getWindowManager();
+		Display d  = win.getDefaultDisplay(); 
+    	d = win.getDefaultDisplay();
+    	CAMERA_HEIGHT = d.getHeight();
+    	CAMERA_WIDTH = d.getWidth();
+    	
 		final Camera camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 
 		return new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), camera);
