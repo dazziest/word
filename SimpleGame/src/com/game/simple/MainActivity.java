@@ -85,7 +85,7 @@ public class MainActivity extends SimpleBaseGameActivity {
 		
 		this.mBitmapTextureAtlas = new BitmapTextureAtlas(this.getTextureManager(), 256, 128, TextureOptions.BILINEAR);
 		this.mPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBitmapTextureAtlas, this, "player.png", 0, 0, 3, 4);
-		this.mEnemyTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBitmapTextureAtlas, this, "enemy.png", 73, 0, 3, 4);
+//		this.mEnemyTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBitmapTextureAtlas, this, "enemy.png", 73, 0, 3, 4);
 		this.mBitmapTextureAtlas.load();
 
 		this.mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(this.getTextureManager(), 1024, 1024);
@@ -109,21 +109,21 @@ public class MainActivity extends SimpleBaseGameActivity {
 
 		/* Calculate the coordinates for the face, so its centered on the camera. */
 		final float playerX = (CAMERA_WIDTH - this.mPlayerTextureRegion.getWidth()) / 2;
-		final float playerY = CAMERA_HEIGHT - this.mPlayerTextureRegion.getHeight() - 5;
+		final float playerY = (CAMERA_HEIGHT - this.mPlayerTextureRegion.getHeight()) - 5;
 
 		/* Create two sprits and add it to the scene. */
 		final AnimatedSprite player = new AnimatedSprite(playerX, playerY, this.mPlayerTextureRegion, vertexBufferObjectManager);
 		player.setScaleCenterY(this.mPlayerTextureRegion.getHeight());
-		player.setScale(2);
+		player.setScale(8);
 		player.animate(new long[]{200, 200, 200}, 3, 5, true);
 
-		final AnimatedSprite enemy = new AnimatedSprite(playerX - 80, playerY, this.mEnemyTextureRegion, vertexBufferObjectManager);
-		enemy.setScaleCenterY(this.mEnemyTextureRegion.getHeight());
-		enemy.setScale(2);
-		enemy.animate(new long[]{200, 200, 200}, 3, 5, true);
+//		final AnimatedSprite enemy = new AnimatedSprite(playerX - 80, playerY, this.mEnemyTextureRegion, vertexBufferObjectManager);
+//		enemy.setScaleCenterY(this.mEnemyTextureRegion.getHeight());
+//		enemy.setScale(2);
+//		enemy.animate(new long[]{200, 200, 200}, 3, 5, true);
 
 		scene.attachChild(player);
-		scene.attachChild(enemy);
+//		scene.attachChild(enemy);
 
 		return scene;
 	}
