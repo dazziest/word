@@ -68,7 +68,7 @@ public class MainActivity extends SimpleBaseGameActivity implements IAcceleratio
 	private ITextureRegion mParallaxLayerFront;
 	private PhysicsWorld mPhysicsWorld;
 	private float mGravityX;
-	private float mGravityY = 49f;
+	private float mGravityY = 9.8f;
 	private AnimatedSprite player;
 
 	// ===========================================================
@@ -103,14 +103,14 @@ public class MainActivity extends SimpleBaseGameActivity implements IAcceleratio
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
 		
 		this.mBitmapTextureAtlas = new BitmapTextureAtlas(this.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
-		this.mPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBitmapTextureAtlas, this, "player.png", 0, 0, 3, 4);
+		this.mPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBitmapTextureAtlas, this, "anoman.png", 0, 0, 6, 1);
 //		this.mEnemyTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(this.mBitmapTextureAtlas, this, "enemy.png", 73, 0, 3, 4);
 		this.mBitmapTextureAtlas.load();
 
-		this.mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(this.getTextureManager(), 1024, 1024);
-		this.mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, this, "parallax_background_layer_front.png", 0, 0);
-		this.mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, this, "parallax_background_layer_back.png", 0, 188);
-		this.mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, this, "parallax_background_layer_mid.png", 0, 669);
+		this.mAutoParallaxBackgroundTexture = new BitmapTextureAtlas(this.getTextureManager(), 1024, 2048);
+		this.mParallaxLayerFront = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, this, "bg_front.png", 0, 0);
+		this.mParallaxLayerBack = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, this, "bg_back.jpg", 0, 300);
+		this.mParallaxLayerMid = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mAutoParallaxBackgroundTexture, this, "bg_middle.png", 0, 950);
 		this.mAutoParallaxBackgroundTexture.load();
 	}
 
@@ -119,25 +119,25 @@ public class MainActivity extends SimpleBaseGameActivity implements IAcceleratio
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
 		//create Physic world
-		this.mPhysicsWorld = new PhysicsWorld(new Vector2(0, SensorManager.GRAVITY_EARTH), false);
+		this.mPhysicsWorld = new PhysicsWorld(new Vector2(0, SensorManager.GRAVITY_EARTH), true);
 		//create scene
 		final Scene scene = new Scene();
 		final AutoParallaxBackground autoParallaxBackground = new AutoParallaxBackground(0, 0, 0, 5);
 		final VertexBufferObjectManager vertexBufferObjectManager = this.getVertexBufferObjectManager();
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(0.0f, new Sprite(0, CAMERA_HEIGHT - this.mParallaxLayerBack.getHeight(), this.mParallaxLayerBack, vertexBufferObjectManager)));
-		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-5.0f, new Sprite(0, 80, this.mParallaxLayerMid, vertexBufferObjectManager)));
+		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-3.0f, new Sprite(0, 180, this.mParallaxLayerMid, vertexBufferObjectManager)));
 		autoParallaxBackground.attachParallaxEntity(new ParallaxEntity(-10.0f, new Sprite(0, CAMERA_HEIGHT - this.mParallaxLayerFront.getHeight(), this.mParallaxLayerFront, vertexBufferObjectManager)));
 		scene.setBackground(autoParallaxBackground);
 		scene.setOnSceneTouchListener(this);
 		
 		//set rectangle boundary
-		final Rectangle ground = new Rectangle(0, CAMERA_HEIGHT - 2, CAMERA_WIDTH, 2, vertexBufferObjectManager);
-		final Rectangle roof = new Rectangle(0, 0, CAMERA_WIDTH, 2, vertexBufferObjectManager);
-		final Rectangle left = new Rectangle(0, 0, 2, CAMERA_HEIGHT, vertexBufferObjectManager);
-		final Rectangle right = new Rectangle(CAMERA_WIDTH - 2, 0, 2, CAMERA_HEIGHT, vertexBufferObjectManager);
+		final Rectangle ground = new Rectangle(0, CAMERA_HEIGHT - 115, CAMERA_WIDTH, 0, vertexBufferObjectManager);
+		final Rectangle roof = new Rectangle(0, 0, CAMERA_WIDTH, 0, vertexBufferObjectManager);
+		final Rectangle left = new Rectangle(0, 0, 0, CAMERA_HEIGHT, vertexBufferObjectManager);
+		final Rectangle right = new Rectangle(CAMERA_WIDTH - 0, 0, 0, CAMERA_HEIGHT, vertexBufferObjectManager);
 
 		//create wall
-		final FixtureDef wallFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0.5f);
+		final FixtureDef wallFixtureDef = PhysicsFactory.createFixtureDef(0, 0, 0);
 		PhysicsFactory.createBoxBody(this.mPhysicsWorld, ground, BodyType.StaticBody, wallFixtureDef);
 		PhysicsFactory.createBoxBody(this.mPhysicsWorld, roof, BodyType.StaticBody, wallFixtureDef);
 		PhysicsFactory.createBoxBody(this.mPhysicsWorld, left, BodyType.StaticBody, wallFixtureDef);
@@ -158,13 +158,14 @@ public class MainActivity extends SimpleBaseGameActivity implements IAcceleratio
 
 		/* Create two sprits and add it to the scene. */
 		player = new AnimatedSprite(playerX, playerY, this.mPlayerTextureRegion, vertexBufferObjectManager);
-		final FixtureDef objectFixtureDef = PhysicsFactory.createFixtureDef(-50f, 0.0f, 100f);
+		final FixtureDef objectFixtureDef = PhysicsFactory.createFixtureDef(500f, 0, 0);
 		final Body body = PhysicsFactory.createBoxBody(this.mPhysicsWorld, player, BodyType.DynamicBody, objectFixtureDef);
+		body.resetMassData();
 		
 		this.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(player, body, true, true));
 		player.setScaleCenterY(this.mPlayerTextureRegion.getHeight());
-		player.setScale(2);
-		player.animate(new long[]{200, 200, 200}, 3, 5, true);
+//		player.setScale(2);
+		player.animate(new long[]{150, 150, 150, 150, 150, 150}, 0, 5, true);
 		player.setUserData(body);
 //		scene.registerTouchArea(player);
 
@@ -196,7 +197,7 @@ public class MainActivity extends SimpleBaseGameActivity implements IAcceleratio
 		final Body faceBody = (Body)face.getUserData();
 
 //		int jumpX = -50;
-		int jumpY = -50;
+		int jumpY = -1;
 
 		final Vector2 velocity = Vector2Pool.obtain(this.mGravityX , this.mGravityY * jumpY);
 		faceBody.setLinearVelocity(velocity);
@@ -223,7 +224,7 @@ public class MainActivity extends SimpleBaseGameActivity implements IAcceleratio
 	@Override
 	public void onAccelerationChanged(AccelerationData pAccelerationData) {
 //		this.mGravityX = pAccelerationData.getX();
-////		this.mGravityY = pAccelerationData.getY();
+//		this.mGravityY = pAccelerationData.getY();
 //
 //		final Vector2 gravity = Vector2Pool.obtain(this.mGravityX, this.mGravityY);
 //		this.mPhysicsWorld.setGravity(gravity);
