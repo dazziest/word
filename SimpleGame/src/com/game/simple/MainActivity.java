@@ -45,7 +45,7 @@ import android.view.WindowManager;
  * @author Nicolas Gramlich
  * @since 19:58:39 - 19.07.2010
  */
-public class MainActivity extends SimpleBaseGameActivity implements IAccelerationListener, IOnSceneTouchListener, IOnAreaTouchListener {
+public class MainActivity extends SimpleBaseGameActivity implements IOnSceneTouchListener, IOnAreaTouchListener {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -201,6 +201,7 @@ public class MainActivity extends SimpleBaseGameActivity implements IAcceleratio
 
 		final Vector2 velocity = Vector2Pool.obtain(this.mGravityX , this.mGravityY * jumpY);
 		faceBody.setLinearVelocity(velocity);
+//		faceBody.applyForce(velocity, faceBody.getWorldCenter());
 		Vector2Pool.recycle(velocity);
 	}
 
@@ -215,27 +216,27 @@ public class MainActivity extends SimpleBaseGameActivity implements IAcceleratio
 		return false;
 	}
 
-	@Override
-	public void onAccelerationAccuracyChanged(AccelerationData pAccelerationData) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onAccelerationChanged(AccelerationData pAccelerationData) {
-//		this.mGravityX = pAccelerationData.getX();
-//		this.mGravityY = pAccelerationData.getY();
+//	@Override
+//	public void onAccelerationAccuracyChanged(AccelerationData pAccelerationData) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 //
-//		final Vector2 gravity = Vector2Pool.obtain(this.mGravityX, this.mGravityY);
-//		this.mPhysicsWorld.setGravity(gravity);
-//		Vector2Pool.recycle(gravity);
-	}
+//	@Override
+//	public void onAccelerationChanged(AccelerationData pAccelerationData) {
+////		this.mGravityX = pAccelerationData.getX();
+////		this.mGravityY = pAccelerationData.getY();
+////
+////		final Vector2 gravity = Vector2Pool.obtain(this.mGravityX, this.mGravityY);
+////		this.mPhysicsWorld.setGravity(gravity);
+////		Vector2Pool.recycle(gravity);
+//	}
 	
 	@Override
 	public void onResumeGame() {
 		super.onResumeGame();
 
-		this.enableAccelerationSensor(this);
+//		this.enableAccelerationSensor(this);
 	}
 
 	@Override
